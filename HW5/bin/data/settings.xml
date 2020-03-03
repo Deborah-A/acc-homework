@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<Shape_1>
+	<Radius>362</Radius>
+	<line_wid>387</line_wid>
+	<Color>210, 255, 216, 255</Color>
+	<Now_you_see_it>1</Now_you_see_it>
+	<Circle_Res>100</Circle_Res>
+	<Origin>715.755, 544.653</Origin>
+	<Distance>637.388, 274.286</Distance>
+	<UnknownName></UnknownName>
+</Shape_1>
+<Shape_2>
+	<Radius>100</Radius>
+	<line_wid>100</line_wid>
+	<Color>255, 0, 0, 255</Color>
+	<Now_you_see_it>1</Now_you_see_it>
+	<Circle_Res>100</Circle_Res>
+	<Origin>747.102, 293.878</Origin>
+	<Distance>606.041, 293.878</Distance>
+</Shape_2>
