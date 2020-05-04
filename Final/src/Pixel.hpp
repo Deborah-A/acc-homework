@@ -6,18 +6,21 @@ class Pixel {
 
     public:
     Pixel();
-    Pixel(int x, int y, int z, float b, ofColor c, int zLow, int zHigh);
-        void setup(int x, int y, int z, float b, ofColor c, int zLow, int zHigh);
-        void update();
+    Pixel(int size, int x, int y, int z, ofColor c, int zLow, int zHigh);
+    ~Pixel();
+    void update();
     void draw();
 
 private:
     int xPos;
     int yPos;
     int zPos;
-    int res = 4;
-    int size = 3;
+    float res = 4;
+    int size = 5;
     int deg = 0;
     int brightness;
     ofColor pColor;
+    int camWidth = 1280;
+    int camHeight = 720;
+    int saturation = 0;
 };

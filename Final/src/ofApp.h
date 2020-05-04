@@ -13,15 +13,14 @@ class ofApp : public ofBaseApp{
 		void keyPressed(int key);
         void something();
         void setZValue();
-    void setRes();
+//    void setRes();
     
         ofVideoGrabber vidGrabber;
         ofPixels camPixels;
         ofLight light;
         ofEasyCam camera;
-        vector <Pixel> pixels;
+        vector <Pixel*> pixels;
     vector <int> pixelRes;
-//        ofTexture camtex;
         
 		
 };
