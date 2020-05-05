@@ -1,97 +1,93 @@
 #include "ofApp.h"
 
-int size = 4;
-int camWidth = 1280;
-int camHeight = 720;
-int zLow = 10000;
-int zHigh = -10000;
+float bkgIncrement = 0.5;
+float colorNum = 50;
 int z = 0;
-int res = 4;
-bool run = false;
-int resIndex = 0;
-int timePassed = 1;
-//ofColor pColor = ;
 
-//--------------------------------------------------------------
+//Sets up the window width and height, webcam, opacity settings, and GUI
 void ofApp::setup(){
-    ofBackground(100);
+    ofBackground(50);
     ofSetWindowShape(camWidth, camHeight);
     ofSetFrameRate(24);
-    
-    //    ofEnableLighting();
-    //    light.setPosition(0, 0, 150);
+
     
     vidGrabber.setDeviceID(0);
     vidGrabber.setDesiredFrameRate(24);
     vidGrabber.initGrabber(camWidth, camHeight);
     
     ofEnableAlphaBlending();
-    ofEnableDepthTest();
     
+    gui.setup("Shape 1");
+    gui.setPosition(0, 0);
+    gui.add(sizeSlider.set("Shape Size", 2, 2, 10));
+
 }
 
-//--------------------------------------------------------------
+//Updates the Color of the background to go from black and white,
+//automatically updates the shapes based on webcam photo,
+//updates position of shapes with Pixel's update function
 void ofApp::update(){
-    vidGrabber.update();
-    
-    if((int)ofGetElapsedTimef() % 60 == 0){
-        camPixels = vidGrabber.getPixels();
-        something();
-        
-        
+    colorNum += bkgIncrement;
+    if(colorNum < 50 || colorNum > 100){
+        bkgIncrement*=-1;
     }
     
-    cout << ((int)ofGetElapsedTimef() % 240) << endl;
+    vidGrabber.update();
+    
+    if((int)ofGetElapsedTimef() % 65 == 0){
+        camPixels = vidGrabber.getPixels();
+        createPixels();
+    }
+    
     for(int i = 0; i < pixels.size(); ++i){
         pixels[i]->update();
     }
 }
 
-//--------------------------------------------------------------
+//Draws the background, draws the pixel shapes, draws GUI if drawGui is true
 void ofApp::draw(){
+    ofBackground(colorNum);
     
     for(int i = 0; i < pixels.size(); ++i){
         pixels[i]->draw();
     }
-}
-
-//--------------------------------------------------------------
-void ofApp::keyPressed(int key){
-    if(key == ' ')
-    {
-        camPixels = vidGrabber.getPixels();
-        //        setZValue();
-        something();
-        run = true;
+    
+    if (drawGui) {
+        gui.draw();
     }
 }
 
-void ofApp::something(){
-    //how do i clear the array pixels
+//'X' key toggles the GUI, Spacebar allows manual update of camera
+void ofApp::keyPressed(int key){
+    if (key == 'x') {
+        drawGui = !drawGui;
+    }
+    
+    if(key == ' '){
+        camPixels = vidGrabber.getPixels();
+        createPixels();
+    }
+}
+
+//clears the previous pixels array,
+//resets the lowest and highest Z positions
+//Goes through a 2 dimensional for-loop to create pixels at the right coords based on webcam footage
+void ofApp::createPixels(){
     pixels.clear();
     
     setZValue();
-    for (int x=0; x<camWidth; x+=(size*4)) {
-        for (int y=0; y<camHeight; y+=(size*4)) {
+    for (int x=0; x<camWidth; x+=(sizeSlider*4)) {
+        for (int y=0; y<camHeight; y+=(sizeSlider*4)) {
             ofColor pColor = camPixels.getColor(x, y);
-            float brightness = pColor.getBrightness();
-            //            pColor.setSaturation(180);
-            pixels.push_back(new Pixel(size, x, y, z, pColor, zLow, zHigh));
-            
-            if((camWidth/2)==x && (camHeight/2)==y ){
-                if(brightness > 125){
-                    ofSetBackgroundColor(100, 100, 100);
-                }else{
-                    ofSetBackgroundColor(200, 200, 200);
-                }
-            }
+            pixels.push_back(new Pixel(sizeSlider, x, y, z, pColor, zLow, zHigh));
         }
     }
 }
 
+//Finds the lowest and highest brightness in the photo and sets that as the lowest and highest Z positions
 void ofApp::setZValue(){
-    for (int x=0; x<ofGetWindowWidth(); x+=size) {
-        for (int y=0; y<ofGetWindowHeight(); y+=size) {
+    for (int x=0; x<ofGetWindowWidth(); x+=sizeSlider) {
+        for (int y=0; y<ofGetWindowHeight(); y+=sizeSlider) {
             ofColor pColor = camPixels.getColor(x, y);
             float brightness = pColor.getBrightness();
             if(brightness < zLow){

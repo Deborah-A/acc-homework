@@ -15,7 +15,7 @@ private:
     int xPos;
     int yPos;
     int zPos;
-    float res = 4;
+    float res = 3;
     int size = 5;
     int deg = 0;
     int brightness;
@@ -23,4 +23,6 @@ private:
     int camWidth = 1280;
     int camHeight = 720;
     int saturation = 0;
+    float outlineIncrement = 0.5;
+    float colorNum = 200;
 };
